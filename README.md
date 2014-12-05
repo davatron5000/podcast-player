@@ -1,4 +1,53 @@
-podcast-player
-==============
+# podcast-player
 
-An audio web component for podcasts
+![Screenshot of podcast-player](https://s3.amazonaws.com/f.cl.ly/items/3Q47193Z0f00142R0O42/1d0pzyOUeVH2-d1m77Vxx9QkL0vexZ5bJNbyEGRCfbY.png)
+
+A web component for audio podcasts. It has a few features that make it most suitable for podcasts:
+
+- [x] Play/Pause
+- [x] 30s Rewind Button
+- [x] Seekable Progress Meter
+- [x] Speed Selection
+- [x] Mute/Unmute
+- [ ] [TimeJump](http://davatron5000.github.io/TimeJump/)?
+
+## Usage
+
+To get started you'll need a copy of `webcomponents.js`, either [link from CDNjs](https://cdnjs.com/libraries/webcomponentsjs) or
+
+```
+bower install webcomponentsjs
+```
+
+Include the `webcomponents.js` and the `podcast-player.html` in the `<head>` of your episode page:
+
+```
+<head>
+  <script src="webcomponents.js"></script>
+  <link rel="import" href="podcast-player.html"/>
+</head>
+```
+
+Then in the body of your post, invoke the custom component using the `<podcast-player>` element.
+
+```
+<podcast-player src="my.mp3"></podcast-player>
+```
+
+BINGO-BANGO! Now you're ready to style with good old fashioned CSS. Make it your own good buddy.
+
+## Testing Locally
+
+To test out web components locally, you need to start a local server so you don't get a CORS violation with something like:
+
+```
+cd to/my/directory/
+python -m SimpleHTTPServer
+```
+
+If you have questions about web components, read up on them at [webcomponents.org](http://webcomponents.org/).
+
+## Download, Fork, Commit
+If you like to contribue, please feel free to fork the repo. If you created a brand new feature, I recommend discussing it in an issue first rather wasting your whole weekend working on it, then Hail Mary'ing it my way.
+
+If you're reporting a bug, you'd better have an editable reduced test case on a CodePen or GTFO. Sorry, thems the brakes. I got kids.
