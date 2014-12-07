@@ -113,7 +113,7 @@
 <script>
 var owner = document._currentScript.ownerDocument;
 var tmpl = owner.querySelector('template');
-var proto = Object.create(HTMLElement.prototype);
+var proto = Object.create(HTMLLinkElement.prototype);
 
 proto.createdCallback = function() {
   var player = this;
@@ -211,5 +211,5 @@ proto.createdCallback = function() {
 
 }
 
-document.registerElement('podcast-player', { prototype: proto });
+document.registerElement('podcast-player', { prototype: proto, extends: 'a' });
 </script>
