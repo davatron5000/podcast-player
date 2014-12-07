@@ -118,7 +118,13 @@ var proto = Object.create(HTMLLinkElement.prototype);
 proto.createdCallback = function() {
   var player = this;
   var clone = document.importNode(tmpl.content, true);
+  player.innerHTML = '';
   player.appendChild(clone);
+
+  // Cancel default link behaviour
+  player.addEventListener('click', function(e){
+    e.preventDefault();
+  })
 
   // HTMLAudioElement
   var audio = player.querySelector('audio');
