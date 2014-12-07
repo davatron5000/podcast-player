@@ -130,7 +130,7 @@ proto.createdCallback = function() {
   var audio = player.querySelector('audio');
 
   // TODO: There's probably a more "{{templatey}}" way to do this.
-  audio.src = player.getAttribute('src');
+  audio.src = player.getAttribute('href');
 
   // Buttons
   var play = player.querySelector('.button-play');
