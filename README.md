@@ -3,7 +3,7 @@
 ![Screenshot of podcast-player](https://s3.amazonaws.com/f.cl.ly/items/3Q47193Z0f00142R0O42/1d0pzyOUeVH2-d1m77Vxx9QkL0vexZ5bJNbyEGRCfbY.png)
 
 ```
-<podcast-player src="my.mp3"></podcast-player>
+<a href="my.mp3" is="podcast-player">Listen</a>
 ```
 
 A web component for audio podcasts. It has a few features that make it most suitable for podcasts:
@@ -31,10 +31,10 @@ Include `webcomponents.min.js` and `podcast-player.html` in the `<head>` of your
 <link rel="import" href="podcast-player.html"/>
 ```
 
-Then in the body of your post, invoke the custom component using the `<podcast-player>` element.
+Then in the body of your post, invoke the custom component using an `<a>` element with the `is="podcast-player"` attribute.
 
 ```
-<podcast-player src="my.mp3"></podcast-player>
+<a href="my.mp3" is="podcast-player">Listen</a>
 ```
 
 BINGO-BANGO! Now you should be able to style it with good old fashioned CSS. Make it your own, good buddy.

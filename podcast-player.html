@@ -113,18 +113,24 @@
 <script>
 var owner = document._currentScript.ownerDocument;
 var tmpl = owner.querySelector('template');
-var proto = Object.create(HTMLElement.prototype);
+var proto = Object.create(HTMLLinkElement.prototype);
 
 proto.createdCallback = function() {
   var player = this;
   var clone = document.importNode(tmpl.content, true);
+  player.innerHTML = '';
   player.appendChild(clone);
+
+  // Cancel default link behaviour
+  player.addEventListener('click', function(e){
+    e.preventDefault();
+  })
 
   // HTMLAudioElement
   var audio = player.querySelector('audio');
 
   // TODO: There's probably a more "{{templatey}}" way to do this.
-  audio.src = player.getAttribute('src');
+  audio.src = player.getAttribute('href');
 
   // Buttons
   var play = player.querySelector('.button-play');
@@ -211,5 +217,5 @@ proto.createdCallback = function() {
 
 }
 
-document.registerElement('podcast-player', { prototype: proto });
+document.registerElement('podcast-player', { prototype: proto, extends: 'a' });
 </script>
