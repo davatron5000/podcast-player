@@ -10,13 +10,15 @@ class PodcastPlayer extends LitElement {
       currentTime: { type: String },
       currentSpeedIdx: { type: Number },
       duration: { type: String },
+      playing: { type: Boolean, reflect: true },
+      muted: { type: Boolean, reflect: true },
     };
   }
 
   // TODO: Make styles optional? Easily overrideable?
   static get styles() {
     return css`
-     .sr-only {
+      .sr-only {
         clip: rect(0 0 0 0);
         clip-path: inset(50%);
         height: 1px;
@@ -26,10 +28,10 @@ class PodcastPlayer extends LitElement {
         width: 1px;
       }
 
-     .podcast-player {
+      .podcast-player {
         display: flex;
         gap: 0.5rem;
-        width:100%;
+        width: 100%;
         align-items: center;
         grid-gap: 0.5rem;
       }
@@ -45,7 +47,7 @@ class PodcastPlayer extends LitElement {
 
       /* Speed */
       .podcast-player .button-speed:after {
-        content: 'x';
+        content: "x";
       }
 
       /* Play/Pause */
@@ -53,10 +55,10 @@ class PodcastPlayer extends LitElement {
         display: none;
       }
 
-      :host(.is-playing) .button-play .pause {
+      :host([playing]) .button-play .pause {
         display: inline;
       }
-      :host(.is-playing) .button-play .play {
+      :host([playing]) .button-play .play {
         display: none;
       }
 
@@ -65,11 +67,11 @@ class PodcastPlayer extends LitElement {
         display: none;
       }
 
-      :host(.is-muted) .button-mute .muted {
+      :host([muted]) .button-mute .muted {
         display: inline;
       }
 
-      :host(.is-muted) .button-mute .unmuted {
+      :host([muted]) .button-mute .unmuted {
         display: none;
       }
     `;
@@ -86,13 +88,15 @@ class PodcastPlayer extends LitElement {
     this.currentSpeedIdx = 0;
     this.currentTime = 0;
     this.duration = 0;
+    this.playing = false;
+    this.muted = false;
 
     this.audio.addEventListener("timeupdate", this.handleTimeUpdate.bind(this));
     this.audio.addEventListener(
       "loadedmetadata",
       this.handleLoadedMetadata.bind(this)
     );
-    this.audio.addEventListener('ended', this.stop.bind(this))
+    this.audio.addEventListener("ended", this.stop.bind(this));
 
     window.addEventListener(
       "DOMContentLoaded",
@@ -134,7 +138,7 @@ class PodcastPlayer extends LitElement {
 
           this.audio.currentTime = timestamp;
           this.audio.play();
-          this.classList.add("is-playing");
+          this.playing = true;
         },
         false
       );
@@ -194,7 +198,7 @@ class PodcastPlayer extends LitElement {
 
   mute() {
     this.audio.muted = !this.audio.muted;
-    this.classList.toggle("is-muted", this.audio.muted);
+    this.muted = this.audio.muted;
   }
 
   play() {
@@ -204,11 +208,11 @@ class PodcastPlayer extends LitElement {
     } else {
       this.audio.pause();
     }
-    this.classList.toggle("is-playing", !this.audio.paused);
+    this.playing = !this.audio.paused;
   }
 
   stop() {
-    this.classList.toggle("is-playing", !this.audio.paused);
+    this.playing = !this.audio.paused;
   }
 
   rewind() {
@@ -271,7 +275,12 @@ class PodcastPlayer extends LitElement {
           30<br /><<&mdash;
         </button>
 
-        <button class="button-play" aria-label="Play" style="grid-area: play" @click="${this.play}">
+        <button
+          class="button-play"
+          aria-label="Play"
+          style="grid-area: play"
+          @click="${this.play}"
+        >
           <svg class="play"><use xlink:href="#icon-play"></use></svg>
           <svg class="pause"><use xlink:href="#icon-pause"></use></svg>
         </button>
@@ -287,7 +296,9 @@ class PodcastPlayer extends LitElement {
 
         <div style="grid-area: currenttime">
           <span class="sr-only">Current Time</span>
-          <span class="currenttime time" >${this.toHHMMSS(this.currentTime)}</span>
+          <span class="currenttime time"
+            >${this.toHHMMSS(this.currentTime)}</span
+          >
         </div>
 
         <input
@@ -304,11 +315,20 @@ class PodcastPlayer extends LitElement {
           <span class="duration time">${this.toHHMMSS(this.duration)}</span>
         </div>
 
-        <button class="button-speed"  style="grid-area: speed" @click="${this.changeSpeed}">
+        <button
+          class="button-speed"
+          style="grid-area: speed"
+          @click="${this.changeSpeed}"
+        >
           ${this.speeds[this.currentSpeedIdx]}
         </button>
 
-        <button class="button-mute" aria-label="Mute"  style="grid-area: mute" @click="${this.mute}">
+        <button
+          class="button-mute"
+          aria-label="Mute"
+          style="grid-area: mute"
+          @click="${this.mute}"
+        >
           <svg class="unmuted">
             <use xlink:href="#icon-speaker-unmuted"></use>
           </svg>
