@@ -1,0 +1,21 @@
+{
+  "name": "podcast-player",
+  "version": "1.0.0",
+  "description": "![Screenshot of podcast-player](https://s3.amazonaws.com/f.cl.ly/items/3Q47193Z0f00142R0O42/1d0pzyOUeVH2-d1m77Vxx9QkL0vexZ5bJNbyEGRCfbY.png)",
+  "main": "podcast-player.js",
+  "scripts": {
+    "start": "npx http-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davatron5000/podcast-player.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davatron5000/podcast-player/issues"
+  },
+  "homepage": "https://github.com/davatron5000/podcast-player#readme"
+}
