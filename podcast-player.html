@@ -4,7 +4,7 @@
     display: flex;
     width:100%;
     align-items: center;
-    justify-contents: space-between;
+    justify-content: space-between;
     flex-wrap: nowrap;
     font-family: sans-serif;
     font-size: 12px;
@@ -159,6 +159,16 @@ proto.createdCallback = function() {
     return time;
   }
 
+  // Playback toggle function
+  var playbackToggle = function() {
+    if(audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+    player.classList.toggle('is-playing');
+  }
+
   // Get total duration when available
   audio.addEventListener('loadedmetadata', function(){
     progress.setAttribute('max', Math.floor(audio.duration));
@@ -172,14 +182,7 @@ proto.createdCallback = function() {
   });
 
   // Playback toggle
-  play.addEventListener('click', function(){
-    if(audio.paused) {
-      audio.play();
-    } else {
-      audio.pause();
-    }
-    player.classList.toggle('is-playing');
-  });
+  play.addEventListener('click', playbackToggle);
 
   // Mute toggle
   mute.addEventListener('click', function(){
@@ -209,6 +212,69 @@ proto.createdCallback = function() {
     audio.currentTime = Math.floor(audio.duration) * (e.offsetX / e.target.offsetWidth);
   }, false);
 
+  // If the user agent or OS supports the media session api
+  if('mediaSession' in navigator) {
+
+    // Update the position state on the interface provided by the media session api whenever the duration, playbackRate, or position is changed
+    var updatePositionState = function() {
+      navigator.mediaSession.setPositionState({
+        duration: audio.duration,
+        playbackRate: audio.playbackRate,
+        position: audio.currentTime
+      });
+    }
+
+    // On 'play' click
+    navigator.mediaSession.setActionHandler('play', function() {
+      playbackToggle();
+      updatePositionState();
+    });
+
+    // On 'pause' click
+    navigator.mediaSession.setActionHandler('pause', function() {
+      playbackToggle();
+      updatePositionState();
+    });
+
+    // On 'seekbackward' action
+    navigator.mediaSession.setActionHandler('seekbackward', function(details) {
+      // If the user agent or OS provides the seconds to seek by, use it. If not, use 30
+      audio.currentTime -= (details.seekOffset || 30);
+      updatePositionState();
+    });
+
+    // On 'seekforward' action
+    navigator.mediaSession.setActionHandler('seekforward', function(details) {
+      // If the user agent or OS provides the seconds to seek by, use it. If not, use 30
+      audio.currentTime += (details.seekOffset || 30);
+      updatePositionState();
+    });
+
+    // On 'seekto' action
+    navigator.mediaSession.setActionHandler('seekto', function(details) {
+      // If the user fast seeks i.e seek rapidly, and it is supported, fast seek to the specified time(seekTime)
+      if(details.fastSeek && 'fastSeek' in audio) {
+        audio.fastSeek(details.seekTime);
+        updatePositionState();
+        return;
+      }
+      // Else if the user does not fast seek, just seek to the seekTime
+      audio.currentTime = details.seekTime;
+      updatePositionState();
+    });
+
+    // On 'stop' action
+    navigator.mediaSession.setActionHandler('stop', function() {
+      if(!audio.paused) {
+        audio.pause();
+        player.classList.toggle('is-playing');
+      }
+      audio.currentTime = 0;
+      progress.setAttribute('value', 0);
+      currentTime.textContent  = '0:00';
+      updatePositionState();
+    });
+  }
 }
 
 document.registerElement('podcast-player', { prototype: proto });
