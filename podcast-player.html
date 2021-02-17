@@ -159,6 +159,16 @@ proto.createdCallback = function() {
     return time;
   }
 
+  // Playback toggle function
+  var playbackToggle = function() {
+    if(audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+    player.classList.toggle('is-playing');
+  }
+
   // Get total duration when available
   audio.addEventListener('loadedmetadata', function(){
     progress.setAttribute('max', Math.floor(audio.duration));
@@ -172,14 +182,7 @@ proto.createdCallback = function() {
   });
 
   // Playback toggle
-  play.addEventListener('click', function(){
-    if(audio.paused) {
-      audio.play();
-    } else {
-      audio.pause();
-    }
-    player.classList.toggle('is-playing');
-  });
+  play.addEventListener('click', playbackToggle);
 
   // Mute toggle
   mute.addEventListener('click', function(){
@@ -223,23 +226,13 @@ proto.createdCallback = function() {
 
     // On 'play' click
     navigator.mediaSession.setActionHandler('play', function() {
-      if(audio.paused) {
-        audio.play();
-      } else {
-        audio.pause();
-      }
-      player.classList.toggle('is-playing');
+      playbackToggle();
       updatePositionState();
     });
 
     // On 'pause' click
     navigator.mediaSession.setActionHandler('pause', function() {
-      if(audio.paused) {
-        audio.play();
-      } else {
-        audio.pause();
-      }
-      player.classList.toggle('is-playing');
+      playbackToggle();
       updatePositionState();
     });
 
